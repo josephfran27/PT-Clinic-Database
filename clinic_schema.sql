@@ -57,7 +57,6 @@ CREATE TABLE APPOINTMENT (
     Appointment_date DATE NOT NULL,
     Appointment_time TIME NOT NULL,
     Appointment_status VARCHAR(30) NOT NULL,
-    Notes TEXT,
     -- when deleting patient, appointment(s) with the patient are deleted
     FOREIGN KEY (Patient_id) REFERENCES PATIENT(Patient_id) ON DELETE CASCADE,
     -- when deleting therapist, appointment(s) under that therapist are deleted
