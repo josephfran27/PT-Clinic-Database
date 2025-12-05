@@ -95,9 +95,9 @@ CREATE TABLE SESSION_NOTES (
 
 -- MEDICAL_CONDITIONS table
 CREATE TABLE MEDICAL_CONDITIONS (
-	Patient_id INT PRIMARY KEY,
+	Patient_id INT NOT NULL,
     Medical_condition VARCHAR(100) NOT NULL,
-    PRIMARY KEY (Patient_id, Conditions),
+    PRIMARY KEY (Patient_id, Medical_condition),
     FOREIGN KEY (Patient_id) REFERENCES PATIENT(Patient_id) ON DELETE CASCADE
 );
 

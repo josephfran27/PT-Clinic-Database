@@ -12,7 +12,7 @@ INSERT INTO PATIENT (Fname, Lname, Insurance_num, Phone, Street, City, Zip) VALU
 -- insert therapists
 INSERT INTO THERAPIST (Fname, Lname, Phone, Hire_date) VALUES
 ('Dr Aidan', 'Brown', '573-555-2981', '2020-10-05'),
-('Dr Sarah', 'Gettinger', '573-555-2981', '2020-05-13'),
+('Dr Sarah', 'Gettinger', '573-555-2982', '2020-05-13'),
 ('Dr Matthew', 'Summit', '573-555-7826', '2022-06-24');
 
 -- insert treatment plans
@@ -24,27 +24,30 @@ INSERT INTO TREATMENT_PLAN (Goals, Diagnosis, Start_date, End_date, Patient_id, 
 ('Improve hip flexibility', 'Hip bursitis', '2024-11-20', '2025-01-20', 5, 2);
 
 -- insert appointments 
-INSERT INTO APPOINTMENT (Appointment_date, Appointment_time, Appointment_status, Patient_id, Therapist_id, Treat_plan_id) VALUES
-(1, 1, 1, '2025-11-25', '09:00:00', 'Completed', 'Initial assessment completed'),
-(1, 1, 1, '2025-11-27', '09:00:00', 'Completed', 'Good progress on exercises'),
-(2, 2, 2, '2025-11-26', '10:00:00', 'Completed', 'Shoulder mobility improving'),
-(3, 1, 3, '2025-11-28', '14:00:00', 'Completed', 'Core strengthening exercises introduced'),
-(4, 3, 4, '2025-11-29', '11:00:00', 'Scheduled', 'First appointment'),
-(5, 2, 5, '2025-12-02', '15:00:00', 'Scheduled', 'Initial consultation'),
-(1, 1, 1, '2025-12-04', '09:00:00', 'Scheduled', 'Follow-up session');
+INSERT INTO APPOINTMENT (Patient_id, Therapist_id, Treat_plan_id, Appointment_date, Appointment_time, Appointment_status) VALUES
+(1, 1, 1, '2024-11-25', '09:00:00', 'Completed'),
+(1, 1, 1, '2024-11-27', '09:00:00', 'Completed'),
+(2, 2, 2, '2024-11-26', '10:00:00', 'Completed'),
+(3, 1, 3, '2024-11-28', '14:00:00', 'Completed'),
+(4, 3, 4, '2024-12-06', '11:00:00', 'Scheduled'),
+(5, 2, 5, '2024-12-09', '15:00:00', 'Scheduled'),
+(1, 1, 1, '2024-12-11', '09:00:00', 'Scheduled');
 
 -- insert billing info
 INSERT INTO BILLING (Appointment_id, Patient_id, Billing_date, Billing_total, Card_num, Due_date) VALUES
-(1, 1, '2025-11-25', 150.00, '1234', '2025-12-25'),
-(2, 1, '2025-11-27', 150.00, '1234', '2025-12-27'),
-(3, 2, '2025-11-26', 150.00, '5678', '2025-12-26'),
-(4, 3, '2025-11-28', 150.00, '9012', '2025-12-28');
+(1, 1, '2024-11-25', 150.00, '1234', '2024-12-25'),
+(2, 1, '2024-11-27', 150.00, '1234', '2024-12-27'),
+(3, 2, '2024-11-26', 150.00, '5678', '2024-12-26'),
+(4, 3, '2024-11-28', 150.00, '9012', '2024-12-28');
+
 
 -- insert session notes
 INSERT INTO SESSION_NOTES (Appointment_id, Session_num, Session_date, Progress, Notes) VALUES 
-(1, 1, '2025-09-21', 'Baseline established', 'Patient shows good motivation. Range of motion at 60%.'),
-(2, 2, '2025-10-24', 'Improving steadily', 'Range of motion increased to 70%. Reduced pain reported.'),
-(3, 1, '2025-10-27', 'Good initial progress', 'Shoulder elevation improved by 15 degrees.');
+(1, 1, '2024-11-25', 'Baseline established', 'Patient shows good motivation. Range of motion at 60%.'),
+(2, 2, '2024-11-27', 'Improving steadily', 'Range of motion increased to 70%. Reduced pain reported.'),
+(3, 1, '2024-11-26', 'Good initial progress', 'Shoulder elevation improved by 15 degrees.'),
+(4, 1, '2024-11-28', 'Core strengthening started', 'Patient responded well to exercises.');
+
 
 
 -- insert medical conditions
