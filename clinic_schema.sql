@@ -45,7 +45,7 @@ CREATE TABLE TREATMENT_PLAN (
 	-- when deleting patient, treatment plan is deleted 
     FOREIGN KEY (Patient_id) REFERENCES PATIENT(Patient_id) ON DELETE CASCADE,
 	-- when deleting therapist, therapist, treatment plan remains but Therapist_id becomes NULL 
-    FOREIGN KEY (Therapist_id) REFERENCES THERAPIST(Therapist_id) ON DELETE SET NULL
+    FOREIGN KEY (Therapist_id) REFERENCES THERAPIST(Therapist_id) ON DELETE CASCADE
 );
 
 -- APPOINTMENT table

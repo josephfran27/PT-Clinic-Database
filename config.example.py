@@ -1,0 +1,6 @@
+# database configuration file
+
+DB_HOST = '127.0.0.1'
+DB_USER = 'root'
+DB_PASSWORD = 'your_password'
+DB_NAME = 'pt_clinic'
