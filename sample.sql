@@ -1,5 +1,16 @@
 USE pt_clinic;
 
+-- Clear all existing data & auto increment
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE SESSION_NOTES;
+TRUNCATE TABLE BILLING;
+TRUNCATE TABLE APPOINTMENT;
+TRUNCATE TABLE MEDICAL_CONDITIONS;
+TRUNCATE TABLE TREATMENT_PLAN;
+TRUNCATE TABLE PATIENT;
+TRUNCATE TABLE THERAPIST;
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- insert patients
 INSERT INTO PATIENT (Fname, Lname, Insurance_num, Phone, Street, City, Zip) VALUES 
 ('Joseph', 'France', 'HLTH1265', '573-555-1234', '123 Apple St', 'Columbia', '65201'),
@@ -44,10 +55,9 @@ INSERT INTO BILLING (Appointment_id, Patient_id, Billing_date, Billing_total, Ca
 -- insert session notes
 INSERT INTO SESSION_NOTES (Appointment_id, Session_num, Session_date, Progress, Notes) VALUES 
 (1, 1, '2024-11-25', 'Baseline established', 'Patient shows good motivation. Range of motion at 60%.'),
-(2, 2, '2024-11-27', 'Improving steadily', 'Range of motion increased to 70%. Reduced pain reported.'),
+(2, 1, '2024-11-27', 'Improving steadily', 'Range of motion increased to 70%. Reduced pain reported.'),
 (3, 1, '2024-11-26', 'Good initial progress', 'Shoulder elevation improved by 15 degrees.'),
 (4, 1, '2024-11-28', 'Core strengthening started', 'Patient responded well to exercises.');
-
 
 
 -- insert medical conditions

@@ -53,7 +53,7 @@ CREATE TABLE APPOINTMENT (
 	Appointment_id INT PRIMARY KEY AUTO_INCREMENT,
     Patient_id INT NOT NULL,
     Therapist_id INT NOT NULL,
-    Treat_plan_id INT NOT NULL,
+    Treat_plan_id INT,
     Appointment_date DATE NOT NULL,
     Appointment_time TIME NOT NULL,
     Appointment_status VARCHAR(30) NOT NULL,
@@ -61,8 +61,8 @@ CREATE TABLE APPOINTMENT (
     FOREIGN KEY (Patient_id) REFERENCES PATIENT(Patient_id) ON DELETE CASCADE,
     -- when deleting therapist, appointment(s) under that therapist are deleted
     FOREIGN KEY (Therapist_id) REFERENCES THERAPIST(Therapist_id) ON DELETE CASCADE,
-    -- when deleting treatment plan, appointments with that plan are deleted
-    FOREIGN KEY (Treat_plan_id) REFERENCES TREATMENT_PLAN(Treat_plan_id) ON DELETE CASCADE
+    -- when deleting treatment plan, the plan in the appointments is set to NULL
+    FOREIGN KEY (Treat_plan_id) REFERENCES TREATMENT_PLAN(Treat_plan_id) ON DELETE SET NULL
 );
 
 -- BILLING table
