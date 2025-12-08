@@ -94,16 +94,94 @@ def schedule_appointment():
     cursor.close()
     conn.close()
 
+# function to create a treatment plan
+def create_treatment_plan():
+    print("TREATMENT PLAN CREATION")
+    print("Input required fields...")
+
+    # inputs 
+    patient_id = int(input("Enter Patient ID: "))
+    therapist_id = int(input("Enter Therapist ID: "))
+    diagnosis = input("Enter Diagnosis: ")
+    goals = input("Enter Goals: ")
+    start_date = input("Enter Start Date (YYYY-MM-DD): ")
+    end_date = input("Enter End Date (YYYY-MM-DD): ")
+
+    conn = create_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # verify that Patient ID exists
+    cursor.execute("SELECT * FROM PATIENT WHERE Patient_id = %s", (patient_id,))
+    if not cursor.fetchone():
+        print("Error: Patient ID does not exist.")
+        cursor.close()
+        conn.close()
+        return
+    
+    # verify that Therapist ID exists
+    cursor.execute("SELECT * FROM THERAPIST WHERE Therapist_id = %s", (therapist_id,))
+    if not cursor.fetchone():
+        print("Error: Therapist ID does not exist.")
+        cursor.close()
+        conn.close()
+        return
+    
+    # insert treatment plan into TREATMENT_PLAN table
+    cursor.execute("""
+        INSERT INTO TREATMENT_PLAN (Goals, Diagnosis, Start_date, End_date, Patient_id, Therapist_id) 
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (goals, diagnosis, start_date, end_date, patient_id, therapist_id))
+
+    plan_id = cursor.lastrowid
+    conn.commit()
+
+    # retrieve and display details of the scheduled appointment
+    cursor.execute("""
+        SELECT
+            tp.Treat_plan_id,
+            CONCAT(p.Fname, ' ', p.Lname) AS Patient,
+            CONCAT(t.Fname, ' ', t.Lname) AS Therapist,
+            tp.Diagnosis,
+            tp.Goals,
+            tp.Start_date,
+            tp.End_date
+        FROM TREATMENT_PLAN tp
+        JOIN PATIENT p ON tp.Patient_id = p.Patient_id
+        JOIN THERAPIST t ON tp.Therapist_id = t.Therapist_id
+        WHERE tp.Treat_plan_id = %s
+    """, (plan_id,))
+
+    result = cursor.fetchone()
+
+    # calculate duration in days
+    days = (result['End_date'] - result['Start_date']).days
+
+    # treatmend plan information
+    print(f"Treatment Plan created successfully!")
+    print(f"Patient: {result['Patient']}")
+    print(f"Therapist: {result['Therapist']}")
+    print(f"Diagnosis: {result['Diagnosis']}")
+    print(f"Goals: {result['Goals']}")
+    print(f"Duration: {days} days (from {result['Start_date']} to {result['End_date']})")
+
+    cursor.close()
+    conn.close()
+
+
+# main program
 def main():
     while True:
         print("Physical Therapy Clinic Management System")
         print("1. Schedule Appointment")
+        print("2. Create Treatment Plan")
         print("4. Quit")
 
         choice = input("Select an option: ")
 
         if choice == '1':
             schedule_appointment()
+        elif choice == '2':
+            create_treatment_plan()
         elif choice == '4':
             print("Exiting the system. Goodbye!")
             break
