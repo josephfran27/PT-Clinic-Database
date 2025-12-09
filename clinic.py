@@ -85,7 +85,7 @@ def schedule_appointment():
     appointment = cursor.fetchone()
 
     # print information
-    print(f"Appointment Scheduled Successfully!")
+    print(f"\nAppointment Scheduled Successfully!")
     print(f"Appointment ID: {appointment['Appointment_id']}")
     print(f"Patient: {appointment['Patient']}")
     print(f"Therapist: {appointment['Therapist']}")
@@ -157,7 +157,8 @@ def create_treatment_plan():
     days = (result['End_date'] - result['Start_date']).days
 
     # treatmend plan information
-    print(f"Treatment Plan created successfully!")
+    print(f"\nTreatment Plan created successfully!")
+    print(f"Treatment Plan ID: {result['Treat_plan_id']}")
     print(f"Patient: {result['Patient']}")
     print(f"Therapist: {result['Therapist']}")
     print(f"Diagnosis: {result['Diagnosis']}")
@@ -167,13 +168,121 @@ def create_treatment_plan():
     cursor.close()
     conn.close()
 
+def generate_billing():
+    print("GENERATE BILLING")
+
+    # start with showing unbilled appointments
+    conn = create_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT 
+            a.Appointment_id,
+            CONCAT(p.Fname, ' ', p.Lname) AS Patient,
+            CONCAT(t.Fname, ' ', t.Lname) AS Therapist,
+            a.Appointment_date,
+            a.Appointment_status
+        FROM APPOINTMENT a
+        JOIN PATIENT p ON a.Patient_id = p.Patient_id
+        JOIN THERAPIST t ON a.Therapist_id = t.Therapist_id
+        WHERE a.Appointment_status = 'Completed'
+        AND a.Appointment_id NOT IN (SELECT Appointment_id FROM BILLING)
+    """)
+
+    unbilled = cursor.fetchall()
+
+    if unbilled:
+        print("Unbilled Completed Appointments:")
+        for row in unbilled:
+            print(f"Appointment ID: {row['Appointment_id']}, Patient: {row['Patient']}, Therapist: {row['Therapist']}, Date: {row['Appointment_date']}")
+    else:
+        print("No unbilled completed appointments found.")
+        cursor.close()
+        conn.close()
+        return
+
+    print("Input required fields...")
+    appointment_id = int(input("Enter Appointment ID: "))
+    # default price will be $100 per session
+    rate = float(input("Enter Rate per Session (default 100): ") or "100")
+
+    # verify that Appointment ID exists
+    cursor.execute("SELECT * FROM APPOINTMENT WHERE Appointment_id = %s", (appointment_id,))
+    appt = cursor.fetchone()
+
+    if not appt: 
+        print("Error: Appointment ID does not exist.")
+        cursor.close()
+        conn.close()
+        return
+
+    # check that the appointment status is complete
+    if appt['Appointment_status'] != 'Completed':
+        print("Error: Billing can only be generated for completed appointments.")
+        cursor.close()
+        conn.close()
+        return
+
+    # check if billing already exists for this appointment
+    cursor.execute("SELECT * FROM BILLING WHERE Appointment_id = %s", (appointment_id,))
+    if cursor.fetchone():
+        print("Error: Billing already exists for this appointment.")
+        cursor.close()
+        conn.close()
+        return
+
+    # create billing information
+    patient_id = appt['Patient_id']
+    billing_date = date.today()
+    due_date = billing_date + timedelta(days=30)
+    card_num = f"****{patient_id:04d}"  # dummy card number for illustration
+
+    # insert billing into BILLING table
+    cursor.execute("""
+        INSERT INTO BILLING (Appointment_id, Patient_id, Billing_date, Billing_total, Card_num, Due_date)      
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (appointment_id, patient_id, billing_date, rate, card_num, due_date)) 
+    
+    billing_id = cursor.lastrowid
+    conn.commit()
+
+    # retrieve and display billing details
+    cursor.execute("""
+        SELECT
+            b.Bill_id,
+            CONCAT(p.Fname, ' ', p.Lname) AS Patient,
+            p.Insurance_num,
+            CONCAT(t.Fname, ' ', t.Lname) AS Therapist,
+            a.Appointment_date,
+            b.Billing_total,
+            b.Due_date
+        FROM BILLING b
+        JOIN APPOINTMENT a ON b.Appointment_id = a.Appointment_id
+        JOIN PATIENT p ON b.Patient_id = p.Patient_id
+        JOIN THERAPIST t ON a.Therapist_id = t.Therapist_id
+        WHERE b.Bill_id = %s
+    """, (billing_id,))
+
+    result = cursor.fetchone()
+
+    # display
+    print(f"\nBilling Invoice created successfully!")
+    print(f"Patient: {result['Patient']}")
+    print(f"Therapist: {result['Therapist']}")
+    print(f"Appointment Date: {result['Appointment_date']}")
+    print(f"Amount Due: ${result['Billing_total']}")
+    print(f"Due Date: {result['Due_date']}")
+
+    cursor.close()
+    conn.close()
 
 # main program
 def main():
     while True:
-        print("Physical Therapy Clinic Management System")
+        print("\nPHYSICAL THERAPY CLINIC MANAGEMENT SYSTEM")
         print("1. Schedule Appointment")
         print("2. Create Treatment Plan")
+        print("3. Generate Billing")
         print("4. Quit")
 
         choice = input("Select an option: ")
@@ -182,11 +291,15 @@ def main():
             schedule_appointment()
         elif choice == '2':
             create_treatment_plan()
+        elif choice == '3':
+            generate_billing()
         elif choice == '4':
             print("Exiting the system. Goodbye!")
             break
         else:
             print("Please enter a valid option.")
+
+
 
 if __name__ == "__main__":
     main()

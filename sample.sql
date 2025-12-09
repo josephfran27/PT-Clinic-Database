@@ -42,7 +42,7 @@ INSERT INTO APPOINTMENT (Patient_id, Therapist_id, Treat_plan_id, Appointment_da
 (3, 1, 3, '2024-11-28', '14:00:00', 'Completed'),
 (4, 3, 4, '2024-12-06', '11:00:00', 'Scheduled'),
 (5, 2, 5, '2024-12-09', '15:00:00', 'Scheduled'),
-(1, 1, 1, '2024-12-11', '09:00:00', 'Scheduled');
+(6, 1, 1, '2024-12-11', '09:00:00', 'Completed');
 
 -- insert billing info
 INSERT INTO BILLING (Appointment_id, Patient_id, Billing_date, Billing_total, Card_num, Due_date) VALUES
