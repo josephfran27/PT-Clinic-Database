@@ -14,7 +14,7 @@ def create_connection():
     except mysql.connector.Error as err:
         print(f"Error: {err}")
         return None
-    
+
 # function to schedule an appointment
 def schedule_appointment():
     print("APPOINTMENT SCHEDULING")
@@ -299,14 +299,6 @@ def main():
         else:
             print("Please enter a valid option.")
 
-
-
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
 
