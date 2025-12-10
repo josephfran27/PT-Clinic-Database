@@ -60,3 +60,6 @@ python3 clinic.py
 ```
 
 ---
+## Future Goals
+
+I plan on creating front end using Streamlit.
