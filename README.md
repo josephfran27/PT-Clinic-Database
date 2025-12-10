@@ -35,22 +35,22 @@ mysql -u root -p
 Then:
 
 ```sql
-SOURCE /path/to/schema.sql;
+SOURCE /path/to/clinic_schema.sql;
 ```
 
-Or copy/paste the schema.sql contents into MySQL.
+Or copy/paste the clinic_schema.sql contents into MySQL.
 
 ### 4. Populate Database with Sample Data
 
 ```bash
-mysql -u root -p pt_clinic < sample_data.sql
+mysql -u root -p pt_clinic < sample.sql
 ```
 
 Or in MySQL:
 
 ```sql
 USE pt_clinic;
-SOURCE /path/to/sample_data.sql;
+SOURCE /path/to/sample.sql;
 ```
 
 ### 5. Run the Application
